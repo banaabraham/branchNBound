@@ -2,8 +2,7 @@ import math
 
 
 
-#koordinat =  [[200,129],[442,325],[443,33],[240,430],[300,615],[240,430]]
-file = open("C:\\Users\\lenovo\\Desktop\\coding practice\\ganjar\\mymungit.github.io-master\\mymungit.github.io-master\\example.csv")
+koordinat =  [[200,129],[442,325],[443,33],[240,430],[300,615],[240,430]]
 
 koordinat = []
 for i in file:
