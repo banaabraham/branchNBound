@@ -1,10 +1,24 @@
 import math
 
-koordinat =  [[200,129],[443,33],[442,325],[300,615],[240,430]]
 
+
+#koordinat =  [[200,129],[442,325],[443,33],[240,430],[300,615],[240,430]]
+file = open("C:\\Users\\lenovo\\Desktop\\coding practice\\ganjar\\mymungit.github.io-master\\mymungit.github.io-master\\example.csv")
+
+koordinat = []
+for i in file:
+    temp = i.replace("\n","").split(",")
+    koordinat.append([int(temp[1]),int(temp[2])])
 
 def distance(a,b):
     return math.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
+
+def alldistance(jalur):
+    dis = 0
+    for i in range(len(jalur)-1):
+        dis += distance(koordinat[jalur[i]],koordinat[jalur[i+1]])
+    return dis
+
 
 def genCostMat(koordinat):
     costMat = [[0 for i in range(len(koordinat))] for i in range(len(koordinat))]
@@ -16,7 +30,7 @@ def genCostMat(koordinat):
                 costMat[i][j] = distance(koordinat[i],koordinat[j])
     return costMat
 
-def reduce(costMat):
+def reduce(costMat,adder=0):
     minRow = []
     cols = [[] for i in range(len(koordinat))]
     minCol = []
@@ -49,7 +63,7 @@ def reduce(costMat):
         for j in range(len(costMat)):
             reduced[i][j] = reduced[i][j] - minCol[j]
  
-    cost = sum(minRow)+sum(minCol)
+    cost = sum(minRow)+sum(minCol)+adder
     return reduced,cost
 
 def evaluate(cm,x,y):
@@ -63,19 +77,19 @@ def evaluate(cm,x,y):
                 transformed[i][j] = cm[i][j]
     return transformed
 
-def getNext(awal,cm,Min,cities):
+def getNext(awal,cm,cities):
     Next = []
     newCm = []
+    Min = float("Inf")
     for i in cities: 
         if i!=awal:
             temp = evaluate(cm,awal,i)
-            m,c = reduce(temp)
-            if c<=Min:
+            m,c = reduce(temp,cost_matrix[awal][i])
+            if c<Min:
                 Min = c
                 Next = i   
                 newCm = temp
     return Next,newCm,Min
-
 
 
 def solve(koordinat):
@@ -87,22 +101,23 @@ def solve(koordinat):
     
     m = genCostMat(koordinat)
     cm,Min = reduce(m)
-    yielded  = Min
+    global cost_matrix
+    cost_matrix = cm
     
     while len(cities)>0:
-        print(Min)
-        temp = getNext(awal,cm,Min,cities)
+        temp = getNext(awal,cm,cities)
         jalur.append(temp[0])
         cm = temp[1]
-        Min = temp[2]+Min+yielded
         awal = temp[0]
         cities.remove(awal)
-    
     
     jalur.append(0)  
         
     return jalur
 
-
+cost_matrix = []
 
 j = solve(koordinat)
+t = [i for i in range(len(koordinat))]
+print(alldistance(j)) 
+print(alldistance(t)) 
